@@ -66,10 +66,20 @@ class ViewController: UIViewController {
     var handToAnalyse = [(0, ""), (0, ""), (0, ""), (0, ""), (0, "")]
     //---
     var theHand = [(Int, String)]()
+    //---
+    let userDef = UserDefaultsManager()
     //------------------------------------------
     override func viewDidLoad() {
         //---
         super.viewDidLoad()
+        //---
+        if !userDef.doesKeyExist(theKey: "credits") { // ! pour dir que le argument est false !!
+            userDef.setKey(theValue: 2000 as AnyObject, theKey: "credits")
+        } else {
+            credits = userDef.getValue(theKey: "credits") as! Int
+        }
+        //---
+        creditsLabel.text = "CRÉDITS: \(credits)"
         //---
         createCardObjectsFromImages()
         //---
@@ -90,6 +100,7 @@ class ViewController: UIViewController {
     //------------------------------------------
     
     func createDeckOfCards() {
+        deckOfCards = [(Int, String)] ()
         for a in 0...3 {
             let suits = ["d", "h", "c", "s"]
             for b in 1...13 {
@@ -218,12 +229,13 @@ class ViewController: UIViewController {
             permissionToSelectCards = false
             dealButton.alpha = 0.5
             resetCards()
-            deckOfCards.removeAll()
+          //  deckOfCards.removeAll()
             createDeckOfCards()
             handToAnalyse = [(0, ""), (0, ""), (0, ""), (0, ""), (0, "")]
             chances = 2
             bet = 0
             betLabel.text = "MISE : 0"
+            userDef.setKey(theValue: credits as AnyObject, theKey: "credits")
         }
     }
     
@@ -409,16 +421,15 @@ class ViewController: UIViewController {
     @IBAction func again(_ sender: UIButton) {
         //---
         if credits == 0 && bet == 0{
-        credits = 2000
-        creditsLabel.text = "CRÉDITS : \(credits)"
-        bet = 0
-        betLabel.text = "MISE : \(bet)"
-        again.alpha = 0.5
-        bet100.alpha = 1
-        allIn.alpha = 1
-        resetCards()
-        resetBackOfCards()
-            
+            credits = 2000
+            creditsLabel.text = "CRÉDITS : \(credits)"
+            bet = 0
+            betLabel.text = "MISE : \(bet)"
+            again.alpha = 0.5
+            bet100.alpha = 1
+            allIn.alpha = 1
+            resetCards()
+            resetBackOfCards()            
         }
     }
     //------------------------------------------
